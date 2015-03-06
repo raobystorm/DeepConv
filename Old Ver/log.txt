@@ -1,0 +1,116 @@
+
+2013/10/8
+
+Begin to write the develop log here.
+
+Working on initialize procedure. The whole architecture is
+
+cNetwork->cNetColumn->cLayer->cFilterGroup->cFilter.
+
+2013/10/9
+
+any operation after push back do not work. find a solution
+
+2013/10/11
+
+Filter development.
+
+In layer of fully-connected and output neurons, filter
+
+re-define image class and input part
+
+2013/10/15
+
+continuing build the project. make sure the initialization part works well
+
+2013/10/17
+
+fix the problem of malloc & new
+
+2013/10/27
+
+fix the 150*150 problem of out put
+
+2013/10/29 
+
+continue the net column compute part.
+next time ask prof. tezuka about multi threading
+
+2013/10/30
+
+figure out the solution of input & output of each layer
+
+2013/11/01
+
+Finish the ouput part of layers. Inherited from filter groups
+
+2013/11/02
+
+Finish the compute functions
+
+2013/11/07 
+Need to fixing the problem of pooling kernels
+
+2013/11/08
+max pooling input and filter group problem.
+fix the output of max pooling layers
+
+2013/11/11
+convolution calculation is not over after using npp library
+continue re-write the compute function.
+
+2013/11/12
+think about the concurrency problem of each layer.
+how to wait until the end of last d2h io finish and not disrupt the other columns
+
+2013/11/13
+change the layer construction method, using the layer type flag in global values
+start working on fully connected layers
+reconsider the fully connected part. device may have a memory race
+
+2013/11/15
+Finished works mentioned above. About normal fully connected layers, the efficient 
+is fair. But for the first fully layer, more attention is required.
+Continue work on the situation of using gpu mem directly of the first fully layer.
+The memory usage is optional now, by setting one bool of global values one can shut
+down the copy routine between CPU memory and GPU memory, using GPU memory only 
+to get a speed-up. but still some problem with weights, using GPU mem directly...
+
+2013/11/17
+Didn't do much things...Keep working on GPU mem directly part...
+How about the inputs part of using GPU mem directly
+Re-construct the input part of fully connected layers
+
+2013/11/18
+continue work on output layer
+re-write the part of fully layer, using float type as temp space to increase accuracy
+what about the output device allocation of output layer
+fix the output of the layer
+
+2013/11/20
+re-write all the device function calls that in the loop. In-loop calls will dramatically 
+slow down the performance. So new way of mem working?
+considering re-write the usage of device mem
+the cuda unknown error is also related to overloard of kernel function
+ call of multiplying in the fully layer
+
+ 2013/11/22
+ Starting reconstructing the device memory related code....
+ continue on annoying re-writing...
+ except convolution layers the others need combine memory to improve perf
+
+ 2013/11/25 
+ by finding the method of using multiple device pointers in kernel funciton
+ there is no need to combine the memory now...
+
+ 2014/07/29
+Trying to use new proposal to higher recognition rate.
+1, store weights update delta value into cFilterGroup-fDevDeltaTemp
+2, modified UpdateWeightsConvo function saving the delta of weight and initialization
+of cFilterGroup
+3, change the entrance of function above
+4, add a new fuction(UpdateWeightsConvo, change the old funtion to
+UpdateWeightsDeltaConvo) to update fDevTemp(real kernel weights) 
+from fDevDeltaTemp(weight delta values in this iter)
+
+$: no learning effect again, try to fix
